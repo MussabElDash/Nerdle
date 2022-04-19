@@ -1,8 +1,12 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.script.ScriptException;
 
@@ -77,6 +81,20 @@ public class Permutations {
 		return all_perms;
 	}
 
+	public static Set<String> eleminateDuplicates(Set<String> all_perms) {
+		String operators = "[\\+\\*\\-/=]";
+		Map<Object, List<String>> map = all_perms.stream().collect(Collectors.groupingBy(s -> {
+			String split[] = s.split(operators);
+			split[split.length - 1] = "=" + split[split.length - 1];
+			Set<String> res = new HashSet<>(Arrays.asList("+", "-", "*", "/"));
+			res.removeIf(o -> !s.contains(o));
+			res.addAll(Arrays.asList(split));
+			return res;
+		}, Collectors.toList()));
+		return map.values().stream().map(l -> l.stream().findAny()).filter(e -> e.isPresent()).map(e -> e.get())
+				.collect(Collectors.toSet());
+	}
+
 	public static void main(String[] args) throws IOException, ScriptException {
 		for (int i = 3; i < 10; i++) {
 			System.out.println("Generating for size " + i);
@@ -93,4 +111,4 @@ public class Permutations {
 			pw.close();
 		}
 	}
-}
+};

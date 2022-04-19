@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,22 +22,19 @@ public class Nerdle {
 	private Map<Character, Set<Integer>> rightLocation = new HashMap<>();
 	private Set<Character> must = new HashSet<Character>();
 	private Set<String> all_perms = new HashSet<String>();
-	private Map<Character, Boolean> hasMany = new HashMap<>();
+	private Map<Character, Long> allExactCounts = new HashMap<>();
 
 	public Nerdle(int size) throws IOException {
 		this.size = size;
 		for (int d : digits1) {
-			hasMany.put(Character.forDigit(d, 10), true);
 			for (int i = 0; i < size; i++) {
 				possibleLocation.computeIfAbsent(Character.forDigit(d, 10), k -> new HashSet<Integer>()).add(i);
 			}
 		}
-		hasMany.put('0', true);
 		for (int i = 1; i < size; i++) {
 			possibleLocation.computeIfAbsent('0', k -> new HashSet<Integer>()).add(i);
 		}
 		for (char c : operands) {
-			hasMany.put(c, true);
 			for (int i = 1; i < size - 3; i++) {
 				possibleLocation.computeIfAbsent(c, k -> new HashSet<Integer>()).add(i);
 			}
@@ -60,14 +58,20 @@ public class Nerdle {
 		if (s.length() != size || result.length() != size) {
 			return;
 		}
+		// Getting the exact count of a character in case the guess exceeds the
+		// solution's count
+		Map<Character, Long> nonZeroCount = IntStream.range(0, size).boxed().filter(i -> result.charAt(i) != '0')
+				.collect(Collectors.groupingBy(i -> s.charAt(i), Collectors.counting()));
+		Map<Character, Long> exactCounts = IntStream.range(0, size).boxed().filter(i -> result.charAt(i) == '0')
+				.filter(i -> nonZeroCount.containsKey(s.charAt(i))).map(i -> s.charAt(i)).distinct()
+				.collect(Collectors.toMap(c -> c, c -> nonZeroCount.get(c)));
+		allExactCounts.putAll(exactCounts);
+
 		for (int i = 0; i < size; i++) {
-			int tempi = i;
 			switch (result.charAt(i)) {
 			case '0':
-				if (IntStream.range(0, size).anyMatch(
-						ind -> ind != tempi && s.charAt(ind) == s.charAt(tempi) && result.charAt(ind) != '0')) {
+				if (allExactCounts.containsKey(s.charAt(i))) {
 					possibleLocation.getOrDefault(s.charAt(i), new HashSet<Integer>()).remove(i);
-					hasMany.put(s.charAt(i), false);
 				} else {
 					possibleLocation.remove(s.charAt(i));
 				}
@@ -91,25 +95,16 @@ public class Nerdle {
 	}
 
 	private String unique() {
-		int max = 0;
-		String maxStr = "none";
-		for (String s : all_perms) {
-			Set<Character> chars = s.chars().mapToObj(c -> (char) c).collect(Collectors.toSet());
-			if (chars.size() > max) {
-				max = chars.size();
-				maxStr = s;
-			}
-		}
-		return maxStr;
+		// unique_perms = Permutations.eleminateDuplicates(all_perms);
+		Function<String, Long> countUnique = s -> s.chars().distinct().count();
+		Comparator<String> maxUnique = Comparator.comparing(countUnique);
+		return Permutations.eleminateDuplicates(all_perms).stream().collect(Collectors.maxBy(maxUnique)).orElse("none");
 	}
 
 	public String guess() {
 		Iterator<String> iter = all_perms.iterator();
 		allPerms: while (iter.hasNext()) {
 			String perm = iter.next();
-			if (perm.equals("35-6*5=5")) {
-				System.out.println();
-			}
 			// Checking if all the values that must be in the equation are in the equation
 			if (must.stream().anyMatch(c -> !perm.contains(c.toString()))) {
 				iter.remove();
@@ -126,7 +121,8 @@ public class Nerdle {
 			// Checking if the values should be occurring more than once
 			Map<Character, Long> counters = perm.chars().mapToObj(c -> (char) c)
 					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-			if (counters.keySet().stream().anyMatch(k -> counters.get(k) > 1 && !hasMany.get(k))) {
+			if (counters.keySet().stream()
+					.anyMatch(k -> allExactCounts.containsKey(k) && counters.get(k) != allExactCounts.get(k))) {
 				iter.remove();
 				continue;
 			}
