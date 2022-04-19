@@ -3,7 +3,7 @@ Yet another simple solver for [Nerdle](https://nerdlegame.com/). Written in Java
 
 Doesn't Provide optimal paths, but suggest a solution that provides most eliminations possible.
 All possible permutaions will be listed.
-You can use `Permutation.java` to generate files with all possible permutations for puzzle size (3,5-10) which are already generated, You can just start playing now.
+You can use `Permutation.java` to generate files with all possible permutations for puzzle size (3,5-9) which are already generated, You can just start playing now.
 
 ## Playing
 Start with defing the size of the puzzle.
