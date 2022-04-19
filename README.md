@@ -32,3 +32,5 @@ Enter your guess followed by the result
 recommended Guess is 35-6*5=5
 [35-6*5=5]
 ```
+## Credits
+Permutations implementaion from [starypatyk](https://github.com/starypatyk/nerdle-solver) with my own solver to add the option to enter my own guess and change the size of the puzzle to be able to use it on Classic/Mini/Instant/Speed versions of Nerdle
