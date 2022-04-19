@@ -4,6 +4,29 @@ Yet another simple solver for [Nerdle](https://nerdlegame.com/). Written in Java
 Doesn't Provide optimal paths, but suggest a solution that provides most eliminations possible.
 All possible permutaions will be listed.
 You can use `Permutation.java` to generate files with all possible permutations for puzzle size (3,5-9) which are already generated, You can just start playing now.
+```
+Permutation of the size 3 puzzles are
+0=0
+1=1
+2=2
+3=3
+4=4
+5=5
+6=6
+7=7
+8=8
+9=9
+```
+You can use `Simulation.java` to simulate the nerdle's reponses (may mark a different cell as black in case of guess contains more of the same number than the solution has). for example the following might happen:
+```
+You Guess:
+679/7=97
+Nerdle's reposonse might be 
+01020202
+while the simulation response might be
+00021202
+both hints while they're in different location helps you know the exact number of occurrences of the numer `7`
+```
 
 ## Playing
 Start with defing the size of the puzzle.
