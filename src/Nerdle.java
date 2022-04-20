@@ -130,7 +130,7 @@ public class Nerdle {
 	}
 
 	public String guess() {
-		Set<String> removed = new HashSet<>();
+//		Set<String> removed = new HashSet<>();
 
 		Iterator<String> iter = all_perms.iterator();
 		allPerms: while (iter.hasNext()) {
@@ -158,7 +158,7 @@ public class Nerdle {
 					&& counters.get(k) != allExactCounts.get(k) || counters.get(k) < atLeastCounts.get(k);
 			if (counters.keySet().stream().anyMatch(checkingCounts)) {
 				iter.remove();
-				removed.add(perm);
+//				removed.add(perm);
 				continue;
 			}
 			// Checking if the values are in their possible location
@@ -175,10 +175,12 @@ public class Nerdle {
 				break;
 			}
 		}
-		Optional<String> unique = addSomeRemoved(removed);
+//		Optional<String> unique = addSomeRemoved(removed);
+		Optional<String> unique = Optional.empty();
 		return unique.orElse(unique(all_perms).orElse("none"));
 	}
 
+	@SuppressWarnings("unused")
 	private Optional<String> addSomeRemoved(Set<String> removed) {
 		// count the known characters
 		int totalKnown = atLeastCounts.values().stream().reduce(0, Integer::sum);

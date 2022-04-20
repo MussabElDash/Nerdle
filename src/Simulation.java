@@ -47,7 +47,8 @@ public class Simulation {
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
 //		Simulation sim = new Simulation(8, "34+37=71");
-		Simulation sim = new Simulation(8, "75-20=55");
+//		Simulation sim = new Simulation(8, "75-20=55");
+		Simulation sim = new Simulation(8, "35-6*5=5");
 		String res = "";
 		while (!res.equals("22222222")) {
 			System.out.println(res = sim.simulate(scan.next()));
