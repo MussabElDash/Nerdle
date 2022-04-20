@@ -30,6 +30,6 @@ local.properties
 
 
 #Project Specific
-!Nerdle.jar
+!Nerdle*.jar
 !3rd Party Libraries/**
 /bin/
