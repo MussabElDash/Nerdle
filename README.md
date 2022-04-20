@@ -17,6 +17,7 @@ Permutation of the size 3 puzzles are
 8=8
 9=9
 ```
+
 You can use `Simulation.java` to simulate the nerdle's reponses (may mark a different cell as black in case of guess contains more of the same number than the solution has). for example the following might happen:
 ```
 You Guess:
@@ -45,15 +46,13 @@ Enter the size of the puzzle
 Enter your guess followed by the result
 58-46=12
 10201100
-
 recommended Guess is 93-37=56
-[93-37=56, 30-5*6=0, 96-39=57, 33-5*6=3, 30-6*5=0, 65-30=35, 95-30=65, 33-6*5=3, 95-65=30, 65-35=30, 96-37=59, 39-5*6=9, 95-39=56, 96-57=39, 37-6*5=7, 35-6*5=5, 93-57=36, 39-6*5=9, 37-5*6=7, 96-59=37, 36-5*6=6, 35-5*6=5, 75-39=36, 95-35=60, 95-60=35, 95-59=36, 36-6*5=6]
+all possible answers: [93-37=56, 30-5*6=0, 96-39=57, 33-5*6=3, 30-6*5=0, 65-30=35, 95-30=65, 33-6*5=3, 95-65=30, 65-35=30, 96-37=59, 39-5*6=9, 95-39=56, 96-57=39, 37-6*5=7, 35-6*5=5, 93-57=36, 39-6*5=9, 37-5*6=7, 96-59=37, 36-5*6=6, 35-5*6=5, 75-39=36, 95-35=60, 95-60=35, 95-59=36, 36-6*5=6]
 Enter your guess followed by the result
 67*9=603
 10101001
-
 recommended Guess is 35-6*5=5
-[35-6*5=5]
+all possible answers: [35-6*5=5]
 ```
 ## Credits
 Permutations implementaion from [starypatyk](https://github.com/starypatyk/nerdle-solver) with my own solver to add the option to enter my own guess and change the size of the puzzle to be able to use it on Classic/Mini/Instant/Speed versions of Nerdle
