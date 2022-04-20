@@ -30,6 +30,7 @@ public class Nerdle {
 	private Map<Character, Integer> atLeastCounts = new HashMap<>(
 			Arrays.stream(all_chars).mapToObj(c -> (char) c).collect(Collectors.toMap(c -> c, c -> 0)));
 	private Set<Character> tried = new HashSet<>();
+	private Set<String> uniquePerms = new HashSet<>();
 	int maxNumO, maxNumD;
 
 	public Nerdle(int size) throws IOException {
@@ -123,9 +124,12 @@ public class Nerdle {
 	}
 
 	private Optional<String> unique(Set<String> perms) {
-		// unique_perms = Permutations.eleminateDuplicates(all_perms);
 		Function<String, Long> countUnique = s -> s.chars().distinct().count();
 		Comparator<String> maxUnique = Comparator.comparing(countUnique);
+		if (perms == all_perms) {
+			uniquePerms = Permutations.eleminateDuplicates(all_perms);
+			return uniquePerms.stream().collect(Collectors.maxBy(maxUnique));
+		}
 		return Permutations.eleminateDuplicates(perms).stream().collect(Collectors.maxBy(maxUnique));
 	}
 
@@ -224,6 +228,7 @@ public class Nerdle {
 	}
 
 	public void play() {
+		System.out.println("recommended Guess is " + guess());
 		do {
 			System.out.println("Enter your guess followed by the result");
 			String guess = scan.next();
@@ -236,7 +241,7 @@ public class Nerdle {
 	}
 
 	public void showGuesses() {
-		System.out.println("all possible answers: " + all_perms);
+		System.out.println("all possible answers: " + uniquePerms);
 	}
 
 	public static void main(String[] args) throws IOException {
