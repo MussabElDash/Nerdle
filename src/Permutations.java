@@ -1,7 +1,12 @@
+import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +86,7 @@ public class Permutations {
 		return all_perms;
 	}
 
-	public static Set<String> eleminateDuplicates(Set<String> all_perms) {
+	public static Set<String> eleminateDuplicates(Collection<String> all_perms) {
 		String operators = "[\\+\\*\\-/=]";
 		Map<Object, List<String>> map = all_perms.stream().collect(Collectors.groupingBy(s -> {
 			String split[] = s.split(operators);
@@ -93,6 +98,22 @@ public class Permutations {
 		}, Collectors.toList()));
 		return map.values().stream().map(l -> l.stream().findAny()).filter(e -> e.isPresent()).map(e -> e.get())
 				.collect(Collectors.toSet());
+	}
+
+	public static Set<String> loadPerm(int size) throws URISyntaxException, IOException {
+		Set<String> all_perm = new HashSet<String>();
+
+		Path filePath = Constants.getZstdFilePath(size, true);
+		filePath = Paths.get(Compression.class.getResource(filePath.toString()).toURI());
+
+		BufferedReader bf = Compression.getBufferedReader(filePath.toFile());
+		String line;
+		while ((line = bf.readLine()) != null) {
+			all_perm.add(line);
+		}
+		bf.close();
+
+		return all_perm;
 	}
 
 	public static void main(String[] args) throws IOException, ScriptException {
