@@ -5,6 +5,11 @@ target/**
 *.ear
 *.class
 
+#Project Specific
+!Nerdle*.jar
+!**/3rd Party Libraries/**
+/bin/
+
 # eclipse specific
 *.pydevproject
 .project
@@ -27,10 +32,3 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 .DS_Store
-
-
-#Project Specific
-!Nerdle*.jar
-!3rd Party Libraries/**
-/bin/
-
