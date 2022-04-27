@@ -1,4 +1,5 @@
 package utils;
+
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,11 +41,13 @@ public class Constants {
 	private static int getSize(Path filePath) {
 		int size = 0;
 		if (filePath.endsWith(TXT_FILE_EXTENSION)) {
-			size = Integer.parseInt(
-					filePath.getFileName().toString().replace(TXT_FILE_PREFIX, "").replace(TXT_FILE_EXTENSION, ""));
+			int index = filePath.getFileName().toString().lastIndexOf(TXT_FILE_PREFIX) + TXT_FILE_PREFIX.length();
+			size = Integer.parseInt(filePath.getFileName().toString()
+					.substring(index, filePath.getFileName().toString().length()).replace(TXT_FILE_EXTENSION, ""));
 		} else if (filePath.endsWith(ZSTD_FILE_EXTENSION)) {
-			size = Integer.parseInt(
-					filePath.getFileName().toString().replace(ZSTD_FILE_PREFIX, "").replace(ZSTD_FILE_EXTENSION, ""));
+			int index = filePath.getFileName().toString().lastIndexOf(ZSTD_FILE_PREFIX) + ZSTD_FILE_PREFIX.length();
+			size = Integer.parseInt(filePath.getFileName().toString()
+					.substring(index, filePath.getFileName().toString().length()).replace(ZSTD_FILE_EXTENSION, ""));
 		}
 		return size;
 	}

@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import Play.Nerdle;
 import Simulation.TotalSimulation;
 import utils.Permutations;
 import utils.Compare.Compare;
@@ -62,6 +63,7 @@ public class Statistics {
 	}
 
 	public Statistics.StatisticsDetails calcStatistics() throws URISyntaxException, IOException {
+		Nerdle.setAllPermutation(allPermutations);
 		StatisticsDetails details = new StatisticsDetails();
 		details.setSize(size);
 		details.setAllPermutations(allPermutations);
@@ -308,7 +310,7 @@ public class Statistics {
 	}
 
 	public static void main(String[] args) throws URISyntaxException, IOException {
-		Statistics stat = new Statistics(5);
+		Statistics stat = new Statistics(8);
 		System.out.println(stat.calcStatistics());
 	}
 }

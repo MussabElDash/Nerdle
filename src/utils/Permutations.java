@@ -1,4 +1,5 @@
 package utils;
+
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -103,7 +104,7 @@ public class Permutations {
 		Set<String> all_perm = new HashSet<String>();
 
 		Path filePath = Constants.getZstdFilePath(size, true);
-		filePath = Paths.get(Compression.class.getResource(filePath.toString()).toURI());
+		filePath = Paths.get(Compression.class.getClassLoader().getResource(filePath.toString()).toURI());
 
 		BufferedReader bf = Compression.getBufferedReader(filePath.toFile());
 		String line;
