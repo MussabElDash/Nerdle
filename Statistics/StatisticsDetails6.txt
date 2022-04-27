@@ -1,0 +1,19 @@
+StatisticsDetails [
+	size=6, 
+	max=4, 
+	averageTrials=3.0, 
+	bestAverage=
+		PermutationStatistics [permutation=27/9=3, max=3, average=2.72, percentageLessEqualAvg={2=27.18%, 3=100%}], 
+	allStatistics=[
+		PermutationStatistics [permutation=27/9=3, max=3, average=2.72, percentageLessEqualAvg={2=27.18%, 3=100%}], 
+		PermutationStatistics [permutation=27/3=9, max=3, average=2.76, percentageLessEqualAvg={2=23.79%, 3=100%}], 
+		PermutationStatistics [permutation=36/9=4, max=3, average=2.76, percentageLessEqualAvg={2=23.79%, 3=100%}], 
+		PermutationStatistics [permutation=8*7=56, max=3, average=2.79, percentageLessEqualAvg={2=19.9%, 3=100%}], 
+		PermutationStatistics [permutation=28/7=4, max=3, average=2.79, percentageLessEqualAvg={2=20.39%, 3=100%}], 
+		PermutationStatistics [permutation=56/8=7, max=3, average=2.79, percentageLessEqualAvg={2=20.39%, 3=100%}], 
+		PermutationStatistics [permutation=56/7=8, max=3, average=2.8, percentageLessEqualAvg={2=19.9%, 3=100%}], 
+		PermutationStatistics [permutation=28/4=7, max=3, average=2.8, percentageLessEqualAvg={2=19.9%, 3=100%}], 
+		PermutationStatistics [permutation=7*8=56, max=3, average=2.8, percentageLessEqualAvg={2=19.42%, 3=100%}], 
+		PermutationStatistics [permutation=32/8=4, max=3, average=2.82, percentageLessEqualAvg={2=17.48%, 3=100%}]
+	]
+]

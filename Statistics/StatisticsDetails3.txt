@@ -1,0 +1,19 @@
+StatisticsDetails [
+	size=3, 
+	max=10, 
+	averageTrials=6.0, 
+	bestAverage=
+		PermutationStatistics [permutation=7=7, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}], 
+	allStatistics=[
+		PermutationStatistics [permutation=7=7, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}], 
+		PermutationStatistics [permutation=0=0, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}], 
+		PermutationStatistics [permutation=8=8, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}], 
+		PermutationStatistics [permutation=1=1, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}], 
+		PermutationStatistics [permutation=9=9, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}], 
+		PermutationStatistics [permutation=2=2, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}], 
+		PermutationStatistics [permutation=3=3, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}], 
+		PermutationStatistics [permutation=4=4, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}], 
+		PermutationStatistics [permutation=5=5, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}], 
+		PermutationStatistics [permutation=6=6, max=10, average=5.5, percentageLessEqualAvg={2=20%, 3=30%, 4=40%, 5=50%, 6=60%, 7=70%, 8=80%, 9=90%, 10=100%}]
+	]
+]
