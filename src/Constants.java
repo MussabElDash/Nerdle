@@ -3,8 +3,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class Constants {
 	public static String ZSTD_FILE_EXTENSION = ".zstd";
 	public static String TXT_FILE_EXTENSION = ".txt";
@@ -41,11 +39,11 @@ public class Constants {
 	private static int getSize(Path filePath) {
 		int size = 0;
 		if (filePath.endsWith(TXT_FILE_EXTENSION)) {
-			size = Integer.parseInt(StringUtils.substringAfterLast(filePath.getFileName().toString(), TXT_FILE_PREFIX)
-					.replace(TXT_FILE_EXTENSION, ""));
+			size = Integer.parseInt(
+					filePath.getFileName().toString().replace(TXT_FILE_PREFIX, "").replace(TXT_FILE_EXTENSION, ""));
 		} else if (filePath.endsWith(ZSTD_FILE_EXTENSION)) {
-			size = Integer.parseInt(StringUtils.substringAfterLast(filePath.getFileName().toString(), ZSTD_FILE_PREFIX)
-					.replace(ZSTD_FILE_EXTENSION, ""));
+			size = Integer.parseInt(
+					filePath.getFileName().toString().replace(ZSTD_FILE_PREFIX, "").replace(ZSTD_FILE_EXTENSION, ""));
 		}
 		return size;
 	}

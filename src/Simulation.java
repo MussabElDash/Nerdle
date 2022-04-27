@@ -9,8 +9,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class Simulation {
 
 	private String solution;
@@ -66,7 +64,7 @@ public class Simulation {
 
 		char[] solutionChar = solution.toCharArray();
 		char[] guessChar = guess.toCharArray();
-		char[] chars = StringUtils.repeat('0', size).toCharArray();
+		char[] chars = "0".repeat(size).toCharArray();
 
 		IntStream.range(0, size).filter(i -> solutionChar[i] == guessChar[i]).forEach(i -> chars[i] = '2');
 		// Iterate over the solution

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class TotalSimulation {
 	private int size;
 	private String solution;
@@ -27,7 +25,7 @@ public class TotalSimulation {
 
 		String ans = "";
 		int guessNum = 0;
-		String expectedAns = StringUtils.repeat('2', size);
+		String expectedAns = "2".repeat(size);
 
 		while (!ans.equals(expectedAns)) {
 			guessNum++;
