@@ -1,4 +1,5 @@
 package Play;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -15,7 +16,7 @@ import utils.Permutations;
 public class Nerdle {
 	private static Set<String> allPermutation;
 	private static Scanner scan = new Scanner(System.in);
-	public static Map<Integer, String> firstGuesses = Map.of(5, "3*2=6", 6, "3*7=56");
+	public static Map<Integer, String> firstGuesses = Map.of(5, "3*2=6", 6, "27/9=3");
 	private Set<String> all_perms;
 	private Collection<String> uniquePerms = new HashSet<>();
 	private CharacterStatistics charStats;
