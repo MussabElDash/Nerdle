@@ -39,26 +39,8 @@ public class CharacterStatistics {
 	}
 
 	public List<String> getMaxSums(Collection<String> availablePerms) {
-//		if (availablePerms.size() != permSum.size()) {
-//			permSum = permSum.entrySet().stream().filter(entry -> availablePerms.contains(entry.getKey()))
-//					.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-//		}
-
 		return permSum.entrySet().stream().filter(entry -> availablePerms.contains(entry.getKey()))
 				.sorted(Entry.comparingByValue()).map(Entry::getKey).collect(Collectors.toList());
-//
-//				Set<String> maxs = new HashSet<>();
-//		for (int i = availablePerms.stream().findAny().orElse("").length(); i > 0; i--) {
-//			int tempI = i;
-//			long max = permSum.entrySet().stream().filter(entry -> entry.getKey().chars().distinct().count() == tempI)
-//					.mapToLong(Entry::getValue).max().orElse(Long.MAX_VALUE);
-//			maxs = permSum.entrySet().stream().filter(entry -> entry.getKey().chars().distinct().count() == tempI)
-//					.filter(entry -> entry.getValue() == max).map(Entry::getKey).collect(Collectors.toSet());
-//			if (!maxs.isEmpty()) {
-//				break;
-//			}
-//		}
-//		return maxs;
 	}
 
 	public class Details implements Comparable<Details> {

@@ -1,8 +1,10 @@
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -11,46 +13,48 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Simulation {
 
-	private int size;
 	private String solution;
-	private Map<Character, Long> counts;
 
 	public Simulation(String solution) {
 		if (solution == null || solution.isBlank()) {
 			throw new IllegalArgumentException();
 		}
-		size = solution.length();
 		this.solution = solution;
-		counts = solution.chars().mapToObj(c -> (char) c)
-				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 	}
 
-	public String simulate1(String guess) {
-		if (guess == null || guess.isBlank() || guess.length() != size) {
-			throw new IllegalArgumentException();
-		}
-		char[] chars = new char[size];
-		for (int i = 0; i < size; i++) {
-			char gc = guess.charAt(i), sc = solution.charAt(i);
-			if (gc == sc) {
-				chars[i] = '2';
-			} else if (counts.getOrDefault(gc, 0l) == 0) {
-				chars[i] = '0';
-			} else {
-				chars[i] = '1';
-			}
-		}
-		IntStream.range(0, size).boxed().collect(Collectors.groupingBy(i -> guess.charAt(i), Collectors.toSet()))
-				.entrySet().stream().filter(entry -> counts.getOrDefault(entry.getKey(), 0l) != 0)
-				.filter(entry -> entry.getValue().size() > counts.get(entry.getKey()))
-				.flatMap(entry -> entry.getValue().stream().filter(i -> chars[i] != '2')
-						.limit(entry.getValue().size() - counts.get(entry.getKey())))
-				.forEach(i -> chars[i] = '0');
-		return new String(chars);
+	public String exactSimulation(String guess) {
+		return exactCompare(solution, guess);
 	}
 
 	public String simulate(String guess) {
 		return compare(solution, guess);
+	}
+
+	public static String exactCompare(String solution, String guess) {
+		if (guess == null || solution == null || guess.isBlank() || solution.isBlank()
+				|| guess.length() != solution.length()) {
+			throw new IllegalArgumentException();
+		}
+		int size = solution.length();
+		char[] solutionChar = solution.toCharArray();
+		char[] guessChar = guess.toCharArray();
+		char[] chars = "0".repeat(size).toCharArray();
+
+		Map<Character, Long> counts = IntStream.range(0, size).mapToObj(i -> solutionChar[i])
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+		IntStream.range(0, size).filter(i -> solutionChar[i] == guessChar[i]).forEach(i -> {
+			counts.compute(guessChar[i], (k, v) -> v - 1);
+			chars[i] = '2';
+		});
+		IntStream.range(0, size).filter(i -> chars[i] != '2').filter(i -> counts.containsKey(guessChar[i]))
+				.forEach(i -> {
+					if (counts.get(guessChar[i]) != 0) {
+						counts.compute(guessChar[i], (k, v) -> v - 1);
+						chars[i] = '1';
+					}
+				});
+		return new String(chars);
 	}
 
 	public static String compare(String solution, String guess) {
@@ -74,36 +78,45 @@ public class Simulation {
 	}
 
 	public static Map<String, Set<String>> providePossibleAnswers(String guess, Set<String> permutations) {
-		return permutations.stream().collect(Collectors.groupingBy(perm -> compare(perm, guess), Collectors.toSet()));
+//		return permutations.stream().collect(Collectors.groupingBy(perm -> {
+//			return compare(perm, guess);
+//		}, Collectors.toSet()));
+		return permutations.stream().collect(Collectors.groupingBy(perm -> {
+			return exactCompare(perm, guess);
+		}, Collectors.toSet()));
 	}
 
 	public static Set<String> bestGuess(Set<String> allPerms, Set<String> possiblePerms) {
-//		AtomicLong minMax = new AtomicLong(Long.MAX_VALUE);
-//		AtomicReference<String> bestGuess = new AtomicReference<>("");
+		AtomicLong minMax = new AtomicLong(Long.MAX_VALUE);
+		AtomicReference<Set<String>> bestGuess = new AtomicReference<>();
+
+		allPerms.parallelStream().forEach(guess -> {
+			int max = providePossibleAnswers(guess, possiblePerms).values().stream().mapToInt(Set::size).max()
+					.orElse(Integer.MAX_VALUE);
+			synchronized (minMax) {
+				if (max < minMax.get()) {
+					minMax.set(max);
+					bestGuess.set(new HashSet<>(List.of(guess)));
+				} else if (max == minMax.get()) {
+					bestGuess.get().add(guess);
+				}
+			}
+		});
+
+		return bestGuess.get();
+
+//		Map<Integer, Set<String>> maxs = allPerms.parallelStream()
+//				.collect(
+//						Collectors
+//								.groupingBy(
+//										perm -> providePossibleAnswers(perm, possiblePerms).values().stream()
+//												.mapToInt(Set::size).max().orElse(Integer.MAX_VALUE),
+//										Collectors.toSet()));
 //
-//		allPerms.stream().forEach(guess -> {
-//			int max = providePossibleAnswers(guess, possiblePerms).values().stream().mapToInt(Set::size).max()
-//					.orElse(Integer.MAX_VALUE);
-//			if (max < minMax.get()) {
-//				minMax.set(max);
-//				bestGuess.set(guess);
-//			}
-//		});
-
-		Map<Integer, Set<String>> maxs = allPerms.parallelStream()
-				.collect(
-						Collectors
-								.groupingBy(
-										perm -> providePossibleAnswers(perm, possiblePerms).values().stream()
-												.mapToInt(Set::size).max().orElse(Integer.MAX_VALUE),
-										Collectors.toSet()));
-
-		int min = maxs.keySet().stream().min(Integer::compareTo).orElse(Integer.MAX_VALUE);
-
-		return maxs.entrySet().stream().filter(entry -> entry.getKey() == min).map(Entry::getValue).findAny()
-				.orElse(new HashSet<>());
-
-//		return bestGuess.get();
+//		int min = maxs.keySet().stream().min(Integer::compareTo).orElse(Integer.MAX_VALUE);
+//
+//		return maxs.entrySet().stream().filter(entry -> entry.getKey() == min).map(Entry::getValue).findAny()
+//				.orElse(new HashSet<>());
 	}
 
 	public static void main(String[] args) {
@@ -112,13 +125,12 @@ public class Simulation {
 //		Simulation sim = new Simulation("75-20=55");
 //		Simulation sim = new Simulation("35-6*5=5");
 //		Simulation sim = new Simulation("10+1-8=3");
-		Simulation sim = new Simulation("1+1=2");
+		Simulation sim = new Simulation("6+5+6=17");
 		String res = "";
-		while (!res.equals("22222222")) {
-			System.out.println(res = sim.simulate(scan.next()));
+		while (!res.equals("2".repeat(sim.solution.length()))) {
+			System.out.println(res = sim.exactSimulation(scan.next()));
 		}
 		scan.close();
 	}
 
 }
-

@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,12 +34,18 @@ public class TotalSimulation {
 			String guess;
 			if (guessNum == 1 && firstGuess.isPresent()) {
 				guess = firstGuess.get();
+			} else if (guessNum == 1 && Nerdle.firstGuesses.containsKey(size)) {
+				guess = Nerdle.firstGuesses.get(size);
 			} else {
 				guess = nerdle.guess();
 			}
-			ans = simulation.simulate(guess);
+			ans = simulation.exactSimulation(guess);
+//			ans = simulation.simulate(guess);
 			nerdle.guessed(guess, ans);
 			simulationResult.get().put(guessNum, new AnsweredGuess(guess, ans));
+			if (Permutations.eleminateDuplicates(List.of(guess, solution)).size() == 1) {
+				break;
+			}
 		}
 
 		return simulationResult.get();
@@ -85,8 +92,8 @@ public class TotalSimulation {
 //		TotalSimulation sim = new TotalSimulation("58-46=12");
 //		TotalSimulation sim = new TotalSimulation("10/2=5");
 //		System.out.println(sim.simulate(Optional.of("58-46=12")));
-		TotalSimulation sim = new TotalSimulation("=121+");
-		System.out.println(sim.simulate(Optional.empty()));
+		TotalSimulation sim = new TotalSimulation("6+5+6=17");
+		System.out.println(sim.simulate(Optional.of("11-6-5=0")));
 		System.out.println(sim.numberOfGuesses());
 	}
 }

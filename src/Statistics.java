@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.DecimalFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,9 +12,11 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Statistics {
+	private static final DecimalFormat dfSharp = new DecimalFormat("#.##");
 	private int size;
 	private Set<String> allPermutations;
 
@@ -24,8 +27,10 @@ public class Statistics {
 
 	public Map<String, List<Integer>> numberOfTrials() throws IOException, URISyntaxException {
 		Map<String, List<Integer>> numberOfTrials = new ConcurrentHashMap<>();
-		allPermutations.parallelStream().forEach(solution -> {
-			allPermutations.parallelStream().forEach(firstGuess -> {
+		AtomicInteger num = new AtomicInteger();
+		allPermutations.parallelStream().forEach(firstGuess -> {
+			System.out.println("Checking guess number: " + num.incrementAndGet());
+			allPermutations.parallelStream().forEach(solution -> {
 				TotalSimulation sim = new TotalSimulation(solution);
 				try {
 					sim.simulate(Optional.of(firstGuess));
@@ -36,13 +41,6 @@ public class Statistics {
 				numberOfTrials.computeIfAbsent(firstGuess, k -> new ArrayList<>()).add(sim.numberOfGuesses());
 			});
 		});
-//		for (String solution : allPermutations) {
-//			for (String firstGuess : allPermutations) {
-//				TotalSimulation sim = new TotalSimulation(solution);
-//				sim.simulate(Optional.of(firstGuess));
-//				numberOfTrials.computeIfAbsent(firstGuess, k -> new ArrayList<>()).add(sim.numberOfGuesses());
-//			}
-//		}
 		return numberOfTrials;
 	}
 
@@ -72,12 +70,7 @@ public class Statistics {
 				.orElse(Integer.MIN_VALUE);
 		details.setMax(max);
 
-		int min = numberOfTrials.values().stream().flatMap(List::stream).mapToInt(Integer::valueOf).min()
-				.orElse(Integer.MAX_VALUE);
-		details.setMin(min);
-
 		int bestTrials = (int) Math.ceil(averageTrails.values().stream().min(Double::compare).orElse(Double.MAX_VALUE));
-
 		details.setAverageTrials(bestTrials);
 
 		Map<String, Double> bestAverages = averageTrails.entrySet().stream()
@@ -91,7 +84,6 @@ public class Statistics {
 			stats.setPermutation(perm);
 			List<Integer> numbers = numberOfTrials.get(perm);
 			stats.setMax(Collections.max(numbers));
-			stats.setMin(Collections.min(numbers));
 
 			Map<Integer, Integer> countOfTrials = new HashMap<>();
 			for (int i = 1; i <= stats.getMax(); i++) {
@@ -121,8 +113,10 @@ public class Statistics {
 			percentageLessEqualAvg.remove(1);
 		}
 
-//		Collections.sort(details.getAllStatistics(), Collections.reverseOrder());
-//		details.setBestAverage(Collections.max(details.getAllStatistics()));
+		int bestMax = details.getAllStatistics().stream().mapToInt(stat -> stat.getMax()).min()
+				.orElse(Integer.MAX_VALUE);
+
+		details.getAllStatistics().removeIf(stat -> stat.getMax() > bestMax);
 
 		Collections.sort(details.getAllStatistics());
 		details.setBestAverage(Collections.min(details.getAllStatistics()));
@@ -136,7 +130,7 @@ public class Statistics {
 		private PermutationStatistics bestAverage;
 		private Map<String, List<Integer>> allNumberOfTrials;
 		private Map<String, Double> allAverages;
-		private int max, min;
+		private int max;
 		private Set<String> allPermutations;
 		private List<PermutationStatistics> allStatistics;
 
@@ -170,14 +164,6 @@ public class Statistics {
 
 		public void setMax(int allMax) {
 			this.max = allMax;
-		}
-
-		public int getMin() {
-			return min;
-		}
-
-		public void setMin(int allMin) {
-			this.min = allMin;
 		}
 
 		public Set<String> getAllPermutations() {
@@ -221,13 +207,13 @@ public class Statistics {
 
 		@Override
 		public String toString() {
-			return "StatisticsDetails [size=" + size + ", max=" + max + ", min=" + min + ", averageTrials="
-					+ averageTrials + ", bestAverage=" + bestAverage + ", allStatistics=" + allStatistics + "]";
+			return "StatisticsDetails [size=" + size + ", max=" + max + ", averageTrials=" + averageTrials
+					+ ", bestAverage=" + bestAverage + ", allStatistics=" + allStatistics + "]";
 		}
 
 		public static class PermutationStatistics implements Comparable<PermutationStatistics> {
 			private String permutation;
-			private int max, min;
+			private int max;
 			private Map<Integer, Integer> countOfTrials;
 			private Map<Integer, Double> percentageOfTrials;
 			private double average;
@@ -247,14 +233,6 @@ public class Statistics {
 
 			public void setMax(int max) {
 				this.max = max;
-			}
-
-			public int getMin() {
-				return min;
-			}
-
-			public void setMin(int min) {
-				this.min = min;
 			}
 
 			public Map<Integer, Integer> getCountOfTrials() {
@@ -291,8 +269,9 @@ public class Statistics {
 
 			@Override
 			public String toString() {
-				return "PermutationStatistics [permutation=" + permutation + ", max=" + max + ", min=" + min
-						+ ", average=" + average + ", percentageLessEqualAvg=" + percentageLessEqualAvg + "]";
+				return "PermutationStatistics [permutation=" + permutation + ", max=" + max + ", average="
+						+ dfSharp.format(average) + ", percentageLessEqualAvg="
+						+ Statistics.toString(percentageLessEqualAvg, "%") + "]";
 			}
 
 			@Override
@@ -314,8 +293,15 @@ public class Statistics {
 		}
 	}
 
+	public static String toString(Map<Integer, Double> map, String nextToValue) {
+		String mapAsString = map.keySet().stream().map(key -> key + "=" + dfSharp.format(map.get(key)) + nextToValue)
+				.collect(Collectors.joining(", ", "{", "}"));
+		return mapAsString;
+
+	}
+
 	public static void main(String[] args) throws URISyntaxException, IOException {
-		Statistics stat = new Statistics(8);
+		Statistics stat = new Statistics(6);
 		System.out.println(stat.calcStatistics());
 	}
 }

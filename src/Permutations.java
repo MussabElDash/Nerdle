@@ -11,9 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
-import javax.script.ScriptException;
+import java.util.stream.IntStream;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -23,13 +23,13 @@ public class Permutations {
 	private int[] digits0 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, digits1 = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	private char[] opers = { '+', '-', '*', '/' },
 			digits_opers = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '*', '/' };
-	private Set<String> all_perms = new HashSet<>();
+	private Set<String> all_perms = ConcurrentHashMap.newKeySet();
 
 	public Permutations(int size) {
 		this.size = size;
 	}
 
-	public void generate_perms(int level, int max_level, String prev_perm) throws ScriptException {
+	public void generate_perms(int level, int max_level, String prev_perm) {
 		if (max_level < 0) {
 			return;
 		}
@@ -67,7 +67,7 @@ public class Permutations {
 		}
 	}
 
-	private void verify_perm(String perm) throws ScriptException {
+	private void verify_perm(String perm) {
 		Expression expression = new ExpressionBuilder(perm).build();
 		double val = expression.evaluate();
 		int intVal = (int) val;
@@ -77,11 +77,9 @@ public class Permutations {
 		}
 	}
 
-	public Set<String> getPerms() throws ScriptException {
+	public Set<String> getPerms() {
 		if (all_perms.isEmpty()) {
-			for (int i = 0; i < size - 2; i++) {
-				generate_perms(0, i, "");
-			}
+			IntStream.range(0, size - 2).parallel().forEach(i -> generate_perms(0, i, ""));
 		}
 		return all_perms;
 	}
@@ -116,7 +114,7 @@ public class Permutations {
 		return all_perm;
 	}
 
-	public static void main(String[] args) throws IOException, ScriptException {
+	public static void main(String[] args) throws IOException {
 		for (int i = 3; i < 10; i++) {
 			System.out.println("Generating for size " + i);
 			Permutations perms = new Permutations(i);
