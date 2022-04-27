@@ -1,3 +1,4 @@
+package Play;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -6,6 +7,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+
+import Simulation.Simulation;
+import Statistics.CharacterStatistics;
+import utils.Permutations;
 
 public class Nerdle {
 	private static Set<String> allPermutation;

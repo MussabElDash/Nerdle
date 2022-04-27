@@ -1,3 +1,5 @@
+package Statistics;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.DecimalFormat;
@@ -14,6 +16,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import Simulation.TotalSimulation;
+import utils.Permutations;
+import utils.Compare.Compare;
 
 public class Statistics {
 	private static final DecimalFormat dfSharp = new DecimalFormat("#.##");
@@ -279,9 +285,10 @@ public class Statistics {
 				int compare = Double.compare(max, o.getMax());
 				int avg = (int) Math.ceil(average);
 				while (compare == 0 && avg > 2) {
+					Math.round(avg);
 					double sum1 = percentageLessEqualAvg.get(avg);
 					double sum2 = o.getPercentageLessEqualAvg().get(avg);
-					compare = Double.compare(sum2, sum1);
+					compare = Compare.compareTo(sum2, sum1);
 					avg--;
 				}
 				if (compare == 0) {
@@ -301,7 +308,7 @@ public class Statistics {
 	}
 
 	public static void main(String[] args) throws URISyntaxException, IOException {
-		Statistics stat = new Statistics(6);
+		Statistics stat = new Statistics(5);
 		System.out.println(stat.calcStatistics());
 	}
 }

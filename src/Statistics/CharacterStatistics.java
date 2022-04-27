@@ -1,3 +1,4 @@
+package Statistics;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -7,6 +8,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import utils.Permutations;
 
 public class CharacterStatistics {
 

@@ -1,3 +1,4 @@
+package Simulation;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -5,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import Play.Nerdle;
+import utils.Permutations;
 
 public class TotalSimulation {
 	private int size;
